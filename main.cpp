@@ -12,23 +12,19 @@ struct classes{
     classes(std::string inClass){
         name = inClass;
     };
-    void isConflicted(){
-        Conflicted = 10000;
-    }
 
-    int Conflicted;
     std::string name;
 
 };
 
 void MinConflicts(int maxSteps);
 void display(classes inClasses[8][3]);
+void preferences();
 std::vector<int> GetRandomConflict(classes inClasses[8][3]);
 int CountConflicts(classes inClasses[8][3]);
 
 int main() {
-    int maxSteps= 10000;
-    MinConflicts(maxSteps);
+    preferences();
 
     return 0;
 }
@@ -140,6 +136,11 @@ void MinConflicts(int maxSteps) {
         steps++;
     }
     display(variables);
+}
+
+void preferences(){
+    int maxStep = 1000;
+    MinConflicts(maxStep);
 }
 
 void display(classes inClasses[8][3]){
