@@ -17,14 +17,25 @@ struct classes{
 
 };
 
-void MinConflicts(int maxSteps);
+void MinConflicts(classes variables[8][3],int maxSteps);
 void display(classes inClasses[8][3]);
-void preferences();
+void preferences(classes variables[8][3]);
 std::vector<int> GetRandomConflict(classes inClasses[8][3]);
 int CountConflicts(classes inClasses[8][3]);
 
 int main() {
-    preferences();
+    classes variables[8][3] = {
+            {classes("MT101"), classes("MT102"), classes("MT403")},
+            {classes("MT104"), classes("MT105"), classes("MT106")},
+            {classes("MT107"), classes("MT201"), classes("MT202")},
+            {classes("MT203"), classes("     "), classes("MT205")},
+            {classes("MT206"), classes("MT301"), classes("MT302")},
+            {classes("MT303"), classes("MT304"), classes("MT401")},
+            {classes("MT402"), classes("MT103"), classes("     ")},
+            {classes("MT501"), classes("MT204"), classes("MT502")},
+    };
+
+    preferences(variables);
 
     return 0;
 }
@@ -35,15 +46,15 @@ std::vector<int> GetRandomConflict(classes inClasses[8][3]){
     std::vector<int> x;
     std::vector<int> y;
     for(int i = 0; i  < 8; i++){
-        if( inClasses[i][0].name !=  "" && inClasses[i][1].name !=  "" && inClasses[i][0].name.at(2) == inClasses[i][1].name.at(2) && inClasses[i][0].name.at(2) != '5'){
+        if( inClasses[i][0].name !=  "     " && inClasses[i][1].name !=  "     " && inClasses[i][0].name.at(2) == inClasses[i][1].name.at(2) && inClasses[i][0].name.at(2) != '5'){
             x.push_back(i);
             y.push_back(0);
         }
-        else if (inClasses[i][0].name !=  "" && inClasses[i][2].name !=  "" && inClasses[i][0].name.at(2) == inClasses[i][2].name.at(2) && inClasses[i][0].name.at(2) != '5'){
+        else if (inClasses[i][0].name !=  "     " && inClasses[i][2].name !=  "     " && inClasses[i][0].name.at(2) == inClasses[i][2].name.at(2) && inClasses[i][0].name.at(2) != '5'){
             x.push_back(i);
             y.push_back(2);
         }
-        else if (inClasses[i][1].name !=  "" && inClasses[i][2].name !=  "" && inClasses[i][1].name.at(2) == inClasses[i][2].name.at(2) && inClasses[i][1].name.at(2) != '5') {
+        else if (inClasses[i][1].name !=  "     " && inClasses[i][2].name !=  "     " && inClasses[i][1].name.at(2) == inClasses[i][2].name.at(2) && inClasses[i][1].name.at(2) != '5') {
             x.push_back(i);
             y.push_back(1);
         }
@@ -58,30 +69,20 @@ std::vector<int> GetRandomConflict(classes inClasses[8][3]){
 int CountConflicts(classes inClasses[8][3]){
     int  conflicts = 0;
     for(int i = 0; i  < 8; i++){
-        if( inClasses[i][0].name !=  "" && inClasses[i][1].name !=  "" && inClasses[i][0].name.at(2) == inClasses[i][1].name.at(2) && inClasses[i][0].name.at(2) != '5'){
+        if( inClasses[i][0].name !=  "     " && inClasses[i][1].name !=  "     " && inClasses[i][0].name.at(2) == inClasses[i][1].name.at(2) && inClasses[i][0].name.at(2) != '5'){
             conflicts++;
         }
-        else if (inClasses[i][0].name !=  "" && inClasses[i][2].name !=  "" && inClasses[i][0].name.at(2) == inClasses[i][2].name.at(2) && inClasses[i][0].name.at(2) != '5'){
+        else if (inClasses[i][0].name !=  "     " && inClasses[i][2].name !=  "     " && inClasses[i][0].name.at(2) == inClasses[i][2].name.at(2) && inClasses[i][0].name.at(2) != '5'){
             conflicts++;
         }
-        else if (inClasses[i][1].name !=  "" && inClasses[i][2].name !=  "" && inClasses[i][1].name.at(2) == inClasses[i][2].name.at(2) && inClasses[i][1].name.at(2) != '5') {
+        else if (inClasses[i][1].name !=  "     " && inClasses[i][2].name !=  "     " && inClasses[i][1].name.at(2) == inClasses[i][2].name.at(2) && inClasses[i][1].name.at(2) != '5') {
             conflicts++;
         }
     }
     return conflicts;
 }
 
-void MinConflicts(int maxSteps) {
-    classes variables[8][3] = {
-            {classes("MT101"), classes("MT102"), classes("MT403")},
-            {classes("MT104"), classes("MT105"), classes("MT106")},
-            {classes("MT107"), classes("MT201"), classes("MT202")},
-            {classes("MT203"), classes("     "), classes("MT205")},
-            {classes("MT206"), classes("MT301"), classes("MT302")},
-            {classes("MT303"), classes("MT304"), classes("MT401")},
-            {classes("MT402"), classes("MT103"), classes("     ")},
-            {classes("MT501"), classes("MT204"),      classes("MT502")},
-    };
+void MinConflicts(classes variables[8][3],int maxSteps) {
 
 
     int steps = 0;
@@ -133,14 +134,53 @@ void MinConflicts(int maxSteps) {
             }
 
         }
+
         steps++;
     }
-    display(variables);
+
 }
 
-void preferences(){
-    int maxStep = 1000;
-    MinConflicts(maxStep);
+void preferences(classes variables[8][3]){
+    int innerMaxSteps = 100;
+    int outerMaxSteps = 100;
+    int steps = 0;
+
+    while(steps != outerMaxSteps){
+        MinConflicts(variables,innerMaxSteps);
+        int pref = 0;
+            for(int i = 0; i < 3; i++){
+                if(variables[0][i].name == "     "){
+
+                    std::cout <<i<<variables[0][i].name<<std::endl;
+                    pref++;
+                }
+                if (variables[3][i].name == "     "){
+                    std::cout <<"3"<<variables[0][i].name<<std::endl;
+                    pref++;
+                }
+                if (variables[7][i].name == "     "){
+
+                    pref++;
+                }
+                if (variables[5][i].name.at(2) == '5'){
+
+                    pref++;
+                }
+                if (variables[4][i].name.at(2) == '5'){
+
+                    pref++;
+                }
+            }
+
+            if(pref == 4){
+                std::cout <<"Steps: "<< steps <<std::endl;
+                std::cout <<"Pref: "<< pref <<std::endl;
+                display(variables);
+                break;
+            }
+
+        steps++;
+    }
 }
 
 void display(classes inClasses[8][3]){
