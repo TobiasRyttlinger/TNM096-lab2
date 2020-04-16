@@ -1,7 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <string>
-
+#include <thread>
+#include <random>
 #include <iomanip>
 #include <cstdlib>
 #include <ctime>
@@ -20,24 +21,14 @@ struct classes{
 
 void MinConflicts(classes variables[8][3],int maxSteps);
 void display(classes inClasses[8][3]);
-void preferences(classes variables[8][3]);
+void preferences();
 std::vector<int> GetRandomConflict(classes inClasses[8][3]);
 int CountConflicts(classes inClasses[8][3]);
+int random();
 
 int main() {
-    srand(time(NULL));
-    classes variables[8][3] = {
-            {classes("MT101"), classes("MT102"), classes("MT403")},
-            {classes("MT104"), classes("MT105"), classes("MT106")},
-            {classes("MT107"), classes("MT201"), classes("MT202")},
-            {classes("MT203"), classes("     "), classes("MT205")},
-            {classes("MT206"), classes("MT301"), classes("MT302")},
-            {classes("MT303"), classes("MT304"), classes("MT401")},
-            {classes("MT402"), classes("MT103"), classes("     ")},
-            {classes("MT501"), classes("MT204"), classes("MT502")},
-    };
-
-    preferences(variables);
+    srand(time(0));
+    preferences();
 
     return 0;
 }
@@ -89,7 +80,9 @@ void MinConflicts(classes variables[8][3],int maxSteps) {
 
     int steps = 0;
     int conflicts = CountConflicts(variables);
+
     int tempConflicts = 9999;
+
     std::vector<int> tempIndex = {0, 0};
     std::string temporaryName;
     classes tempVariables[8][3];
@@ -100,21 +93,19 @@ void MinConflicts(classes variables[8][3],int maxSteps) {
         }
     }
 
-
     while (steps != maxSteps && conflicts != 0) {
 
-        tempIndex.at(0) = rand() % 8;
-        tempIndex.at(1) = rand() % 3;
+            tempIndex.at(0) = rand() % 8;
+            tempIndex.at(1) = rand() % 3;
+            std::vector<int> index = GetRandomConflict(variables);
 
-        std::vector<int> index = GetRandomConflict(variables);
+            temporaryName = tempVariables[index.at(0)][index.at(1)].name;
 
-        temporaryName = tempVariables[index.at(0)][index.at(1)].name;
+            tempVariables[index.at(0)][index.at(1)] = tempVariables[tempIndex.at(0)][tempIndex.at(1)];
 
-        tempVariables[index.at(0)][index.at(1)] = tempVariables[tempIndex.at(0)][tempIndex.at(1)];
+            tempVariables[tempIndex.at(0)][tempIndex.at(1)].name = temporaryName;
+            tempConflicts = CountConflicts(tempVariables);
 
-        tempVariables[tempIndex.at(0)][tempIndex.at(1)].name = temporaryName;
-
-        tempConflicts = CountConflicts(tempVariables);
 
         if (tempConflicts < conflicts) {
             for (int i = 0; i < 8; ++i) {
@@ -136,19 +127,26 @@ void MinConflicts(classes variables[8][3],int maxSteps) {
             }
 
         }
-
         steps++;
     }
-
 }
 
-void preferences(classes variables[8][3]){
-    int innerMaxSteps = 30;
-    int outerMaxSteps = 1000;
-    int steps = 0;
+void preferences(){
+    int innerMaxSteps = 50;
+    int outerMaxSteps = 10000;
+    int steps2 = 0;
 
-    while(steps != outerMaxSteps){
-
+    while(steps2 != outerMaxSteps){
+        classes variables[8][3] = {
+            {classes("MT101"), classes("MT102"), classes("MT403")},
+            {classes("MT104"), classes("MT105"), classes("MT106")},
+            {classes("MT107"), classes("MT201"), classes("MT202")},
+            {classes("MT203"), classes("     "), classes("MT205")},
+            {classes("MT206"), classes("MT301"), classes("MT302")},
+            {classes("MT303"), classes("MT304"), classes("MT401")},
+            {classes("MT402"), classes("MT103"), classes("     ")},
+            {classes("MT501"), classes("MT204"), classes("MT502")},
+        };
         MinConflicts(variables,innerMaxSteps);
 
         int pref = 0;
@@ -157,11 +155,9 @@ void preferences(classes variables[8][3]){
                     pref++;
                 }
                 if (variables[3][i].name == "     "){
-
                     pref++;
                 }
                 if (variables[7][i].name == "     "){
-
                     pref++;
                 }
                 if (variables[5][i].name.at(2) == '5'){
@@ -175,15 +171,12 @@ void preferences(classes variables[8][3]){
             }
 
             if(pref == 4){
-
-                std::cout <<"Steps: "<< steps <<std::endl;
+                std::cout <<"Steps: "<< steps2 <<std::endl;
                 std::cout <<"Pref: "<< pref <<std::endl;
                 display(variables);
                 break;
             }
-        std::cout <<"Steps: "<< steps <<std::endl;
-        std::cout <<"Pref: "<< pref <<std::endl;
-        steps++;
+        steps2++;
     }
 }
 
@@ -199,4 +192,12 @@ void display(classes inClasses[8][3]){
         <<std::setw(3)<< inClasses[i][0].name <<std::setw(3)<<" "<<std::setw(3)<< inClasses[i][1].name <<std::setw(3)<<" "<<std::setw(3)<< inClasses[i][2].name<<std::endl;
         counter++;
     }
+}
+
+
+int random() {
+    std::default_random_engine generator;
+    std::uniform_int_distribution<int> distribution(0,2147483647 );
+    int rand = distribution(generator);
+    return rand;
 }

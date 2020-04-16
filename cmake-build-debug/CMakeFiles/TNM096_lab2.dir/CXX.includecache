@@ -13,6 +13,10 @@ vector
 -
 string
 -
+thread
+-
+random
+-
 iomanip
 -
 cstdlib
