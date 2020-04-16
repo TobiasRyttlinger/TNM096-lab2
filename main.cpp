@@ -1,9 +1,10 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <random>
-#include <algorithm>
+
 #include <iomanip>
+#include <cstdlib>
+#include <ctime>
 struct classes{
     classes(){};
 
@@ -24,6 +25,7 @@ std::vector<int> GetRandomConflict(classes inClasses[8][3]);
 int CountConflicts(classes inClasses[8][3]);
 
 int main() {
+    srand(time(NULL));
     classes variables[8][3] = {
             {classes("MT101"), classes("MT102"), classes("MT403")},
             {classes("MT104"), classes("MT105"), classes("MT106")},
@@ -141,21 +143,21 @@ void MinConflicts(classes variables[8][3],int maxSteps) {
 }
 
 void preferences(classes variables[8][3]){
-    int innerMaxSteps = 100;
-    int outerMaxSteps = 100;
+    int innerMaxSteps = 30;
+    int outerMaxSteps = 1000;
     int steps = 0;
 
     while(steps != outerMaxSteps){
+
         MinConflicts(variables,innerMaxSteps);
+
         int pref = 0;
             for(int i = 0; i < 3; i++){
                 if(variables[0][i].name == "     "){
-
-                    std::cout <<i<<variables[0][i].name<<std::endl;
                     pref++;
                 }
                 if (variables[3][i].name == "     "){
-                    std::cout <<"3"<<variables[0][i].name<<std::endl;
+
                     pref++;
                 }
                 if (variables[7][i].name == "     "){
@@ -173,12 +175,14 @@ void preferences(classes variables[8][3]){
             }
 
             if(pref == 4){
+
                 std::cout <<"Steps: "<< steps <<std::endl;
                 std::cout <<"Pref: "<< pref <<std::endl;
                 display(variables);
                 break;
             }
-
+        std::cout <<"Steps: "<< steps <<std::endl;
+        std::cout <<"Pref: "<< pref <<std::endl;
         steps++;
     }
 }
