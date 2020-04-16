@@ -1,26 +1,63 @@
 #include <iostream>
 #include <vector>
 #include <string>
-bool MinConflicts();
+
+struct classes{
+    classes(){};
+    ~classes();
+
+    classes(std::string inClass){
+        name = inClass;
+    };
+    void isConflicted(){
+        Conflicted = 10000;
+    }
+
+    int Conflicted;
+    std::string name;
+
+};
+
+void MinConflicts(int maxSteps);
 void display(std::string output);
+std::vector<int> GetRandomConflict(classes inClasses);
 
 
 int main() {
-    MinConflicts();
+    int maxSteps= 100;
+    MinConflicts(maxSteps);
 
     return 0;
 }
-bool MinConflicts(){
-    std::vector<std::string> classes {"MT101", "MT102","MT103","MT104","MT105","MT106","MT107","MT201","MT202","MT203","MT204","MT205","MT206","MT301","MT302","MT303","MT304","MT401","MT402","MT403","MT501","MT502"};
-    std::string variables[8][3] = {{classes[0],classes[1],classes[2]}, {classes[3],classes[4],classes[5]}, {classes[6],classes[7],classes[8]}, {classes[9],classes[10],classes[11]}, {classes[12],classes[13],classes[14]}, {classes[15],classes[16],classes[17]}, {classes[18],classes[19],classes[20]}, {classes[21],"0","0"}};
 
-    for(int i = 0; i < 8; i++){
-        std::cout<< variables[i][0] << "," << variables[i][1] << "," << variables[i][2] << std::endl;
+
+std::vector<int> GetRandomConflict(classes inClasses){
+    std::vector<int> indices = {0,0};
+    std::cout << inClasses.name <<std::endl;
+    for(int i = 0; i  < 8; i++){
 
     }
 
 
+    return indices;
+
 }
 
 
+
+
+void MinConflicts(int maxSteps){
+    classes variables[8][3] = {
+            {classes("MT101"),classes("MT102"),classes("MT103")},
+            {classes("MT104"),classes("MT105"),classes("MT106")},
+            {classes("MT107"),classes("MT201"),classes("MT202")},
+            {classes("MT203"),classes("MT204"),classes("MT205")},
+            {classes("MT206"),classes("MT301"),classes("MT302")},
+            {classes("MT303"),classes("MT304"),classes("MT401")},
+            {classes("MT402"),classes("MT403"),classes("MT501")},
+            {classes("MT502"),classes(" "),classes(" ")},
+    };
+
+    std::vector<int> index=GetRandomConflict(variables[7][2]);
+}
 
