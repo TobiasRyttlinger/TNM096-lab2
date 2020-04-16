@@ -8,7 +8,6 @@ struct classes{
 
     ~classes(){};
 
-
     classes(std::string inClass){
         name = inClass;
     };
@@ -27,7 +26,7 @@ std::vector<int> GetRandomConflict(classes inClasses[8][3]);
 int CountConflicts(classes inClasses[8][3]);
 
 int main() {
-    int maxSteps= 100;
+    int maxSteps= 10000;
     MinConflicts(maxSteps);
 
     return 0;
@@ -75,50 +74,81 @@ int CountConflicts(classes inClasses[8][3]){
     return conflicts;
 }
 
-void MinConflicts(int maxSteps){
+void MinConflicts(int maxSteps) {
     classes variables[8][3] = {
-            {classes("MT101"),classes("MT102"),classes("MT403")},
-            {classes("MT104"),classes("MT105"),classes("MT106")},
-            {classes("MT107"),classes("MT201"),classes("MT202")},
-            {classes("MT203"),classes("MT204"),classes("MT205")},
-            {classes("MT206"),classes("MT301"),classes("MT302")},
-            {classes("MT303"),classes("MT304"),classes("MT401")},
-            {classes("MT402"),classes("MT103"),classes("MT501")},
-            {classes("MT502"),classes(""),classes("")},
+            {classes("MT101"), classes("MT102"), classes("MT403")},
+            {classes("MT104"), classes("MT105"), classes("MT106")},
+            {classes("MT107"), classes("MT201"), classes("MT202")},
+            {classes("MT203"), classes(""), classes("MT205")},
+            {classes("MT206"), classes("MT301"), classes("MT302")},
+            {classes("MT303"), classes("MT304"), classes("MT401")},
+            {classes("MT402"), classes("MT103"), classes("")},
+            {classes("MT501"), classes("MT204"),      classes("MT502")},
     };
 
 
-  int steps = 0;
-  int conflicts = CountConflicts(variables);
-  int tempConflicts = 9999;
-  std::vector<int> tempIndex = {0,0};
+    int steps = 0;
+    int conflicts = CountConflicts(variables);
+    int tempConflicts = 9999;
+    std::vector<int> tempIndex = {0, 0};
+    std::string temporaryName;
+    classes tempVariables[8][3];
 
-  classes tempVariables[8][3];
-  std::copy(std::begin(tempVariables), std::end(tempVariables), std::begin(variables));
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 3; ++j) {
+            tempVariables[i][j] = variables[i][j];
+        }
+    }
 
 
+    while (steps != maxSteps && conflicts != 0) {
 
-  while(steps != maxSteps){
+        tempIndex.at(0) = rand() % 8;
+        tempIndex.at(1) = rand() % 3;
 
-      tempIndex.at(0) = rand() % 8;
-      tempIndex.at(1) = rand() % 3;
-      std::cout << tempIndex.at(0) <<", " <<tempIndex.at(1) <<std::endl;
-      std::vector<int> index =GetRandomConflict(variables);
+        std::vector<int> index = GetRandomConflict(variables);
 
-    break;
-      if(conflicts == 0){
-          display(variables);
-          break;
-      }
-      steps++;
-  };
+        temporaryName = tempVariables[index.at(0)][index.at(1)].name;
 
+        tempVariables[index.at(0)][index.at(1)] = tempVariables[tempIndex.at(0)][tempIndex.at(1)];
+
+        tempVariables[tempIndex.at(0)][tempIndex.at(1)].name = temporaryName;
+
+        tempConflicts = CountConflicts(tempVariables);
+
+        if (tempConflicts < conflicts) {
+            for (int i = 0; i < 8; ++i) {
+                for (int j = 0; j < 3; ++j) {
+                    variables[i][j] = tempVariables[i][j];
+                }
+            }
+            std::cout << tempConflicts <<std::endl;
+            conflicts = tempConflicts;
+            if(conflicts == 1){
+                conflicts++;
+            }
+        }
+        else {
+            for (int i = 0; i < 8; ++i) {
+                for (int j = 0; j < 3; ++j) {
+                    tempVariables[i][j] = variables[i][j];
+                }
+            }
+
+        }
+        steps++;
+    }
+    display(variables);
 }
-
 
 void display(classes inClasses[8][3]){
     std::cout << "TP51" <<", "<< "SP34" <<", "<< "K3" <<std::endl;
+    int counter = 9;
     for(int i = 0; i < 8; i++){
-        std::cout <<i<<" "<< inClasses[i][0].name <<", "<< inClasses[i][1].name <<", "<< inClasses[i][2].name<<std::endl;
+        if(counter >12){
+            counter = 1;
+        }
+        std::cout <<std::setw(3)<<counter<<" "<< inClasses[i][0].name <<", "<< inClasses[i][1].name <<", "<< inClasses[i][2].name<<std::endl;
+        counter++;
     }
 }
