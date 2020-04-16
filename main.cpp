@@ -3,6 +3,7 @@
 #include <string>
 #include <random>
 #include <algorithm>
+#include <iomanip>
 struct classes{
     classes(){};
 
@@ -79,10 +80,10 @@ void MinConflicts(int maxSteps) {
             {classes("MT101"), classes("MT102"), classes("MT403")},
             {classes("MT104"), classes("MT105"), classes("MT106")},
             {classes("MT107"), classes("MT201"), classes("MT202")},
-            {classes("MT203"), classes(""), classes("MT205")},
+            {classes("MT203"), classes("     "), classes("MT205")},
             {classes("MT206"), classes("MT301"), classes("MT302")},
             {classes("MT303"), classes("MT304"), classes("MT401")},
-            {classes("MT402"), classes("MT103"), classes("")},
+            {classes("MT402"), classes("MT103"), classes("     ")},
             {classes("MT501"), classes("MT204"),      classes("MT502")},
     };
 
@@ -122,7 +123,7 @@ void MinConflicts(int maxSteps) {
                     variables[i][j] = tempVariables[i][j];
                 }
             }
-            std::cout << tempConflicts <<std::endl;
+
             conflicts = tempConflicts;
             if(conflicts == 1){
                 conflicts++;
@@ -142,13 +143,15 @@ void MinConflicts(int maxSteps) {
 }
 
 void display(classes inClasses[8][3]){
-    std::cout << "TP51" <<", "<< "SP34" <<", "<< "K3" <<std::endl;
+    std::cout <<std::setw(10)<< "TP51" <<std::setw(8)<< "SP34" <<std::setw(6)<< "K3" <<std::endl;
+    std::cout <<std::setw(11)<< "....." <<std::setw(8)<< "....." <<std::setw(8)<< "....." <<std::endl;
     int counter = 9;
     for(int i = 0; i < 8; i++){
         if(counter >12){
             counter = 1;
         }
-        std::cout <<std::setw(3)<<counter<<" "<< inClasses[i][0].name <<", "<< inClasses[i][1].name <<", "<< inClasses[i][2].name<<std::endl;
+        std::cout <<std::setw(3)<<counter<<std::setw(3)<<" "
+        <<std::setw(3)<< inClasses[i][0].name <<std::setw(3)<<" "<<std::setw(3)<< inClasses[i][1].name <<std::setw(3)<<" "<<std::setw(3)<< inClasses[i][2].name<<std::endl;
         counter++;
     }
 }
