@@ -13,10 +13,14 @@ vector
 -
 string
 -
+thread
+-
 random
 -
-algorithm
--
 iomanip
+-
+cstdlib
+-
+ctime
 -
 

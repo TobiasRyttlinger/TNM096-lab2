@@ -24,7 +24,7 @@ void display(classes inClasses[8][3]);
 void preferences();
 std::vector<int> GetRandomConflict(classes inClasses[8][3]);
 int CountConflicts(classes inClasses[8][3]);
-int random();
+
 
 int main() {
     srand(time(0));
@@ -95,6 +95,7 @@ void MinConflicts(classes variables[8][3],int maxSteps) {
 
     while (steps != maxSteps && conflicts != 0) {
 
+
             tempIndex.at(0) = rand() % 8;
             tempIndex.at(1) = rand() % 3;
             std::vector<int> index = GetRandomConflict(variables);
@@ -105,6 +106,9 @@ void MinConflicts(classes variables[8][3],int maxSteps) {
 
             tempVariables[tempIndex.at(0)][tempIndex.at(1)].name = temporaryName;
             tempConflicts = CountConflicts(tempVariables);
+
+
+
 
 
         if (tempConflicts < conflicts) {
@@ -171,7 +175,7 @@ void preferences(){
             }
 
             if(pref == 4){
-                std::cout <<"Steps: "<< steps2 <<std::endl;
+               // std::cout <<"Steps: "<< steps2 <<std::endl;
                 std::cout <<"Pref: "<< pref <<std::endl;
                 display(variables);
                 break;
@@ -195,9 +199,3 @@ void display(classes inClasses[8][3]){
 }
 
 
-int random() {
-    std::default_random_engine generator;
-    std::uniform_int_distribution<int> distribution(0,2147483647 );
-    int rand = distribution(generator);
-    return rand;
-}
